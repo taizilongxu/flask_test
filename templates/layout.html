@@ -9,10 +9,6 @@
     <!-- Loading Bootstrap -->
     <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet">
 
-    <!-- Loading Flat UI -->
-    <link href="{{ url_for('static', filename='flat-ui.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='demo.css') }}" rel="stylesheet">
-
     <link rel="shortcut icon" href="img/favicon.ico">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
@@ -20,51 +16,143 @@
       <script src="dist/js/vendor/html5shiv.js"></script>
       <script src="dist/js/vendor/respond.min.js"></script>
     <![endif]-->
+        <style>
+      body {
+        overflow-y: scroll;
+      }
+      a {
+        color: #0088cc;
+      }
+      a:hover {
+        color: #005580;
+      }
+      .form-signin {
+        max-width: 300px;
+        padding: 19px 29px 29px;
+        margin: 0 auto 20px;
+        background-color: #fff;
+        border: 1px solid #e5e5e5;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+        -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+        box-shadow: 0 1px 2px rgba(0,0,0,.05);
+      }
+      .block-center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .message {
+         border: 1px solid #e6db55;
+         background-color: #ffffe0;
+         padding: 15px 30px 15px 15px;
+         margin: 20px 0;
+       }
+      .navbar-extra {
+         border-radius: 0px;
+         margin-bottom: 30px;
+      }
+      #chat-link {
+        position: fixed;
+        right: 5px;
+        bottom: 10px;
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        padding: 5px 15px 10px 15px;
+        -webkit-border-radius: 5px 0 0 5px;
+        -moz-border-radius: 5px 0 0 5px;
+        -ms-border-radius: 5px 0 0 5px;
+        -o-border-radius: 5px 0 0 5px;
+        border-radius: 5px 0 0 5px;
+        -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        color: #979faf;
+      }
+      .glyphicon-envelope {
+        text-align: center;
+        line-height: 26px;
+        margin-right: 5px;
+        position: relative;
+      }
+      [ng-cloak] { display: none; }
+      .editor {
+        font-size: 14px !important;
+        border: 1px solid #e0e0e0;
+        height: 475px;
+      }
+      .ac {
+        display: inline-block;
+        height: 16px;
+        width: 16px;
+        background-image: url('/static/images/correct.png');
+        background-repeat: no-repeat;
+      }
+      .notac {
+        display: inline-block;
+        height: 16px;
+        width: 16px;
+        background-image: url('/static/images/question.png');
+        background-repeat: no-repeat;
+      }
+    </style>
 </head>
-<body role="document">
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<body>
+<div class="navbar navbar-inverse navbar-extra">
       <div class="container">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Flask</a>
+          <a class="navbar-brand" href="/">LeetCode OJ</a>
         </div>
-        <!-- <div id="navbar" class="navbar-collapse collapse">
+        <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Dropdown <span class="caret"></span></a>
-              <ul class="dropdown-menu" role="menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
-                <li class="divider"></li>
-                <li class="dropdown-header">Nav header</li>
-                <li><a href="#">Separated link</a></li>
-                <li><a href="#">One more separated link</a></li>
-              </ul>
-            </li>
+            <li id="problemsNav"><a href="/problems/">Home</a></li>
+            <li id="pickNav"><a onclick="ga('send', 'event', 'pick-one', 'click');" href="/problems/best-time-to-buy-and-sell-stock">Pick One!</a></li>
+            <li id="submissionsNav"><a href="/submissions/">Submissions</a></li>
+            <!-- TODO: not hard code -->
+
+            <li id=""><a href="/discuss/">Discuss</a></li>
+
+
+            <li id="bookNav"><a onclick="ga('send', 'event', 'book', 'click', 'nav-bar');" href="/book/"><font color="#ed9c28">Book</font></a></li>
+
+
+            <li id="donateNav"><a href="/donate/" onclick="ga('send', 'event', 'donate', 'click', 'nav');"><font color="#ed9c28">Donate</font></a></li>
+
+
           </ul>
-        </div> /.nav-collapse -->
+
+          <div class="navbar-form navbar-right">
+            {% if not session.logged_in %}
+            <a class="btn btn-primary" href="{{ url_for('signin') }}">Sign in</a>
+            <a class="btn btn-default" href="{{ url_for('login') }}">Login</a>
+            {% else %}
+            <a> {{session.username}} </a>
+            <a href="{{ url_for('logout') }}">log out</a>
+            {% endif %}
+
+
+          </div>
+
+          <!--
+          <form class="navbar-form pull-right">
+            <input class="col-md-2" type="text" placeholder="Email">
+            <input class="col-md-2" type="password" placeholder="Password">
+            <button type="submit" class="btn">Sign in</button>
+          </form>
+          -->
+        </div><!--/.navbar-collapse -->
       </div>
-    </nav>
+    </div>
 <div class="container theme-showcase" role="main">
-  <h1 class="demo-section-title">Basic elements</h1>
   <h1>Flaskr</h1>
   <div class="metanav">
-  {% if not session.logged_in %}
-    <a href="{{ url_for('login') }}">log in</a>
-    <a href="{{ url_for('signin') }}">signin</a>
-  {% else %}
-    <a> {{session.username}} </a>
-    <a href="{{ url_for('logout') }}">log out</a>
-  {% endif %}
   </div>
   {% for message in get_flashed_messages() %}
     <div class="flash">{{ message }}</div>
@@ -72,6 +160,4 @@
   {% block body %}{% endblock %}
 </div>
 <script src="{{ url_for('static', filename='js/vendor/jquery.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/flat-ui.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/application.js') }}"></script>
 </body>
